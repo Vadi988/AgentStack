@@ -1,0 +1,121 @@
+version: '3.8'
+
+# ==================================================
+# Docker Compose Configuration
+# ==================================================
+# This file defines all services required to run the
+# application locally or in a single-node environment.
+services:
+
+  # ==================================================
+  # PostgreSQL + pgvector Database
+  # ==================================================
+  db:
+    image: pgvector/pgvector:pg16   # PostgreSQL 16 with pgvector extension enabled
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}          # Database name
+      - POSTGRES_USER=${POSTGRES_USER}      # Database user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  # Database password
+    ports:
+      - "5432:5432"                # Expose PostgreSQL to host (dev use only)
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persistent database storage
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - monitoring
+
+  # ==================================================
+  # FastAPI Application Service
+  # ==================================================
+  app:
+    build:
+      context: .                     # Build image from project root
+      args:
+        APP_ENV: ${APP_ENV:-development}  # Build-time environment
+    ports:
+      - "8000:8000"                # Expose FastAPI service
+    volumes:
+      - ./app:/app/app               # Hot-reload application code
+      - ./logs:/app/logs             # Persist application logs
+    env_file:
+      - .env.${APP_ENV:-development} # Load environment-specific variables
+    environment:
+      - APP_ENV=${APP_ENV:-development}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-supersecretkeythatshouldbechangedforproduction}
+    depends_on:
+      db:
+        condition: service_healthy   # Wait until DB is ready
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: on-failure
+    networks:
+      - monitoring
+
+
+  # ==================================================
+  # Prometheus (Metrics Collection)
+  # ==================================================
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"                 # Prometheus UI
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring
+    restart: always
+
+  # ==================================================
+  # Grafana (Metrics Visualization)
+  # ==================================================
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"                 # Grafana UI
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - monitoring
+    restart: always
+
+  # ==================================================
+  # cAdvisor (Container Metrics)
+  # ==================================================
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    ports:
+      - "8080:8080"                 # cAdvisor UI
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monitoring
+    restart: always
+
+# ==================================================
+# Networks & Volumes
+# ==================================================
+networks:
+  monitoring:
+    driver: bridge                  # Shared network for all services
+volumes:
+  grafana-storage:                  # Persist Grafana dashboards & data
+  postgres-data:                    # Persist PostgreSQL data

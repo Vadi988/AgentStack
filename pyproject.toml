@@ -1,0 +1,177 @@
+[project]
+name = "agentstack"
+version = "0.1.0"
+description = "SAAS AI agent platform powered by LangGraph and FastAPI"
+readme = "README.md"
+requires-python = ">=3.13"
+
+# ==========================
+# Core Runtime Dependencies
+# ==========================
+dependencies = [
+    # --- Web framework & server ---
+
+    "fastapi>=0.121.0",                    # High-performance async web framework
+    "uvicorn>=0.34.0",                     # ASGI server used to run FastAPI
+    "asgiref>=3.8.1",                      # ASGI utilities (sync/async bridges)
+    "uvloop>=0.22.1",                      # Faster event loop for asyncio
+
+    # --- LangChain / LangGraph ecosystem ---
+
+    "langchain>=1.0.5",                    # High-level LLM orchestration framework
+    "langchain-core>=1.0.4",               # Core abstractions for LangChain
+    "langchain-openai>=1.0.2",             # OpenAI integrations for LangChain
+    "langchain-community>=0.4.1",          # Community-maintained LangChain tools
+    "langgraph>=1.0.2",                    # Graph-based agent/state workflows
+    "langgraph-checkpoint-postgres>=3.0.1",# PostgreSQL-based LangGraph checkpointing
+
+    # --- Observability & tracing ---
+
+    "langfuse==3.9.1",                     # LLM tracing, monitoring, and evaluation
+    "structlog>=25.2.0",                   # Structured logging
+
+    # --- Authentication & security ---
+
+    "passlib[bcrypt]>=1.7.4",              # Password hashing utilities
+    "bcrypt>=4.3.0",                       # Low-level bcrypt hashing
+    "python-jose[cryptography]>=3.4.0",    # JWT handling and cryptography
+    "email-validator>=2.2.0",              # Email validation for auth flows
+
+    # --- Database & persistence ---
+     
+    "psycopg2-binary>=2.9.10",             # PostgreSQL driver
+    "sqlmodel>=0.0.24",                    # SQLAlchemy + Pydantic ORM
+    "supabase>=2.15.0",                    # Supabase client SDK
+
+    # --- Configuration & environment ---
+     
+    "pydantic[email]>=2.11.1",             # Data validation with email support
+    "pydantic-settings>=2.8.1",            # Settings management via environment variables
+    "python-dotenv>=1.1.0",                # Load environment variables from .env files
+
+    # --- API utilities ---
+
+    "python-multipart>=0.0.20",            # Multipart/form-data support (file uploads)
+    "slowapi>=0.1.9",                      # Rate limiting for FastAPI
+
+    # --- Metrics & monitoring ---
+
+    "prometheus-client>=0.19.0",           # Prometheus metrics exporter
+    "starlette-prometheus>=0.7.0",         # Prometheus middleware for Starlette/FastAPI
+
+    # --- Search & external tools ---
+
+    "duckduckgo-search>=3.9.0",            # DuckDuckGo search integration
+    "ddgs>=9.6.0",                         # DuckDuckGo search client (alternative)
+
+    # --- Reliability & utilities ---
+
+    "tenacity>=9.1.2",                     # Retry logic for unstable operations
+    "tqdm>=4.67.1",                        # Progress bars
+    "colorama>=0.4.6",                     # Colored terminal output
+
+    # --- Memory / agent tooling ---
+
+    "mem0ai>=1.0.0",                       # AI memory management library
+]
+
+# ==========================
+# Optional Dependencies
+# ==========================
+# Extra dependency sets that can be installed with:
+#   uv pip install .[dev]
+
+[project.optional-dependencies]
+dev = [
+    "black",                              # Code formatter
+    "isort",                              # Import sorter
+    "flake8",                             # Linting tool
+    "ruff",                               # Fast Python linter (modern replacement for flake8)
+    "djlint==1.36.4",                     # Linter/formatter for HTML & templates
+]
+
+# ==========================
+# Dependency Groups (PEP 735-style)
+# ==========================
+# Logical grouping of dependencies, commonly used with modern tooling
+
+[dependency-groups]
+test = [
+    "httpx>=0.28.1",                      # Async HTTP client for testing APIs
+    "pytest>=8.3.5",                      # Testing framework
+]
+
+# ==========================
+# Pytest Configuration
+# ==========================
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+python_files = [
+    "test_*.py",
+    "*_test.py",
+    "tests.py",
+]
+
+# ==========================
+# Black (Code Formatter)
+# ==========================
+[tool.black]
+line-length = 119                          # Maximum line length
+exclude = "venv|migrations"                # Files/directories to skip
+
+# ==========================
+# Flake8 (Linting)
+# ==========================
+[tool.flake8]
+docstring-convention = "all"               # Enforce docstring conventions
+ignore = [
+    "D107", "D212", "E501", "W503", "W605", "D203", "D100",
+]
+exclude = "venv|migrations"
+max-line-length = 119
+
+# ==========================
+# Radon (Cyclomatic Complexity)
+# ==========================
+# Maximum allowed cyclomatic complexity
+radon-max-cc = 10
+
+# ==========================
+# isort (Import Sorting)
+# ==========================
+[tool.isort]
+profile = "black"                          # Compatible with Black
+multi_line_output = "VERTICAL_HANGING_INDENT"
+force_grid_wrap = 2
+line_length = 119
+skip = ["migrations", "venv"]
+
+# ==========================
+# Pylint Configuration
+# ==========================
+[tool.pylint."messages control"]
+disable = [
+    "line-too-long",
+    "trailing-whitespace",
+    "missing-function-docstring",
+    "consider-using-f-string",
+    "import-error",
+    "too-few-public-methods",
+    "redefined-outer-name",
+]
+[tool.pylint.master]
+ignore = "migrations"
+
+# ==========================
+# Ruff (Fast Linter)
+# ==========================
+[tool.ruff]
+line-length = 119
+exclude = ["migrations", "*.ipynb", "venv"]
+[tool.ruff.lint]
+
+# Per-file ignores
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]                  # Allow imports not at top in __init__.py
